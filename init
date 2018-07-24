@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [ ! -f /leanote/data/db/init_db_done ]; then
+    mongorestore -u=$DB_USERNAME -p=$DB_PASSWORD -h db -d leanote \
+        --authenticationDatabase admin \
+        --dir /leanote/leanote/mongodb_backup/leanote_install_data
+    touch /leanote/data/db/init_db_done
+fi
+if [ -f /leanote/app.conf ]; then
+    cp -vf /leanote/app.conf /leanote/leanote/conf
+fi
+
+if [ -z $FIRST_RUN ]; then
+    rm -r /leanote/leanote/public/upload
+    test ! -d /leanote/data/upload && mkdir /leanote/data/upload
+    ln -svf /leanote/data/upload /leanote/leanote/public/
+    test ! -d /leanote/data/files && mkdir /leanote/data/files
+    ln -svf /leanote/data/files /leanote/leanote/
+    test ! -d /leanote/data/mongodb_backup && mkdir /leanote/data/mongodb_backup
+    mv /leanote/leanote/mongodb_backup /leanote/leanote/mongodb_backup_origin
+    ln -svf /leanote/data/mongodb_backup /leanote/leanote/
+    FIRST_RUN=1
+fi
+
+if [ "$1" == "bash" ]; then
+    /bin/bash
+else
+    sh /leanote/leanote/bin/run.sh
+fi
