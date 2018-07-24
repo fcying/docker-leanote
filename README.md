@@ -8,10 +8,11 @@ Edit this `docker-compose.yml`
 version: '3' 
 services:
     mongo:
-        image: mongo:3.4
+        image: mongo:3.6
         restart: always
         volumes:
             - ./leanote-data/db:/data/db
+            - ./leanote-data/configdb:/data/configdb
 
     leanote:
         image: fcying/leanote:latest
@@ -27,15 +28,18 @@ services:
 
 
 
-## Setup  
+## app.conf  
 
-Update mongo config in app.conf
+Modify `port` `url` `mongo` `secret` config in app.conf
 
 Download app.conf from [Here](https://raw.githubusercontent.com/leanote/leanote/master/conf/app.conf).
 
-Then update mongo section:
+Then modify section:
 
 ```
+http.port=9000
+site.url=http://localhost:9000 # or http://x.com:8080, http://www.xx.com:9000
+
 # mongdb
 db.host=db
 db.port=27017
@@ -46,6 +50,9 @@ db.password= # if not exists, please leave it blank
 # mongodb://myuser:mypass@localhost:40001,otherhost:40001/mydb
 # db.url=mongodb://root:root123@localhost:27017/leanote
 # db.urlEnv=${MONGODB_URL} # set url from env. eg. mongodb://root:root123@localhost:27017/leanote
+
+# You Must Change It !! About Security!!
+app.secret=V85ZzBeTnzpsHyjQX4zukbQ8qqtju9y2aDM55VWxAH9Qop19poekx3xkcDVvrD0y #
 ```
 
 

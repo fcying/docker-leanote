@@ -1,11 +1,10 @@
 FROM debian:stable-slim
 MAINTAINER fcying
 
-RUN echo "deb http://mirrors.ustc.edu.cn/debian stable main" > /etc/apt/sources.list
-
 ENV DEBIAN_FRONTEND noninteractive
 ENV VER 2.6.1
-RUN apt-get update && apt-get upgrade \
+RUN echo "deb http://ftp.cn.debian.org/debian stable main" > /etc/apt/sources.list \
+    && apt-get update && apt-get upgrade \
     && apt-get install -y vim wget mongo-tools \
         wkhtmltopdf xvfb ttf-freefont fontconfig dbus psmisc \
     # for leanote mongo setting
