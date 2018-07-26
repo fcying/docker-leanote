@@ -11,6 +11,7 @@ services:
         image: mongo:3.6
         restart: always
         volumes:
+            - /etc/localtime:/etc/localtime:ro
             - ./leanote-data/db:/data/db
             - ./leanote-data/configdb:/data/configdb
 
