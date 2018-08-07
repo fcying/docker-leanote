@@ -1,13 +1,18 @@
-FROM debian:stable-slim
+FROM debian:stretch-slim
 MAINTAINER fcying
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV VER 2.6.1
-RUN echo "deb http://ftp.cn.debian.org/debian stable main" > /etc/apt/sources.list \
+RUN echo "deb http://ftp.cn.debian.org/debian stretch main" > /etc/apt/sources.list \
     && apt-get update && apt-get upgrade \
-    && apt-get install -y vim wget mongo-tools \
-        wkhtmltopdf xvfb ttf-freefont fontconfig dbus psmisc \
-    # for leanote mongo setting
+    && apt-get install -y vim wget cron gnupg \
+        wkhtmltopdf xvfb ttf-freefont fontconfig \
+    # mongodb 3.6
+    && echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/3.6 main" >> /etc/apt/sources.list \
+    && apt-key adv --keyserver hkp://keyserver.Ubuntu.com:80 --recv 58712A2291FA4AD5 \
+    && apt-get update \
+    && apt-get install -y mongodb-org-tools mongodb-org-server \
+    # for leanote mongodb setting
     && mkdir -p /Users/life/Desktop/hadoop/mongodb-osx-x86_64-2.4.7/bin \
     && ln -sf /usr/bin/mongodump /Users/life/Desktop/hadoop/mongodb-osx-x86_64-2.4.7/bin \
     && ln -sf /usr/bin/mongorestore /Users/life/Desktop/hadoop/mongodb-osx-x86_64-2.4.7/bin \
@@ -39,6 +44,6 @@ killall Xvfb\
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY init /
-RUN chmod 770 /init
+RUN chmod +x /init
 
 ENTRYPOINT ["/init"]
