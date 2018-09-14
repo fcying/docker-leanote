@@ -89,5 +89,5 @@ docker-compose up -d
 
 default backup at `2:00` everday.
 
-you can modify it in `data/crontab`
+you can modify it in `./data/crontab`
 

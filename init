@@ -69,6 +69,6 @@ elif [ "$1" == "backup" ]; then
     mv leanote_${now}.tgz /leanote/backup
     find /leanote/backup/* -name "*.tgz" -mtime +$KEEP_DAYS -exec rm {} \;
 else
-    bash /leanote/leanote/bin/run.sh
+    bash /leanote/leanote/bin/run.sh 2>&1 | tee /leanote/data/run.log
 fi
 

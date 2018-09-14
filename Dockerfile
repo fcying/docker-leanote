@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV VER 2.6.1
 RUN echo "deb http://ftp.cn.debian.org/debian stretch main" > /etc/apt/sources.list \
     && apt-get update && apt-get upgrade \
-    && apt-get install -y vim wget cron gnupg \
+    && apt-get install -y vim wget cron gnupg psmisc \
         wkhtmltopdf xvfb ttf-freefont fontconfig \
     # mongodb 3.6
     && echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/3.6 main" >> /etc/apt/sources.list \
