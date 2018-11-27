@@ -5,7 +5,7 @@
 
 Edit this `docker-compose.yml`
 ```
-version: '3' 
+version: '2' 
 services:
     leanote:
         image: fcying/leanote:latest
@@ -25,11 +25,13 @@ services:
 
 ## app.conf  
 
-Modify `port` `url` `mongodb` `secret` config in app.conf
+Modify `port` `url` `mongodb` `secret` config in app.conf. 
 
 Download app.conf from [Here](https://raw.githubusercontent.com/leanote/leanote/master/conf/app.conf).
 
-move `app.conf` to the `data` folder in the current directory
+move `app.conf` to the `data` folder in the current directory.
+
+If there is no such file, will be automatically generated a default app.conf.
 
 Then modify section:
 
@@ -79,7 +81,7 @@ docker-compose exec leanote /init backup
 ```
 docker-compose down
 rm -rf ./data && mkdir data
-tar xzvf leanote_backup/leanote_xxxx.tgz -Cdata
+tar -Cdata -xzvf leanote_backup/leanote_xxxx.tgz
 docker-compose up -d
 ```
 
