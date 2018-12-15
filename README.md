@@ -9,9 +9,9 @@ version: '2'
 services:
     leanote:
         image: fcying/leanote:latest
-        restart: always
         environment:
             - AUTO_BACKUP=1     # auto backup data
+            - BACKUP_HOUR=2     # auto backup time
             - KEEP_DAYS=30      # days of history to keep
         volumes:
             - /etc/localtime:/etc/localtime:ro
@@ -91,5 +91,6 @@ docker-compose up -d
 
 default backup at `2:00` everday.
 
-you can modify it in `./data/crontab`
+`AUTO_BACKUP`:    1:enable; 0:disable
+`BACKUP_HOUR`:    backup hour
 

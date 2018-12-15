@@ -1,6 +1,7 @@
 #!/bin/bash
 
 KEEP_DAYS=${KEEP_DAYS:-"30"}
+BACKUP_HOUR=${BACKUP_HOUR:-"2"}
 now=$(date +%Y%m%d%H%M)
 
 if [ ! -f /var/first_run ]; then
@@ -8,15 +9,17 @@ if [ ! -f /var/first_run ]; then
     rm -f /leanote/data/db.log
     mongod --dbpath /leanote/data/db --fork --logpath /leanote/data/db.log
 
-    # cron
+    # start crond
+    /etc/init.d/cron restart
+
+    # auto backup
     if [ "$AUTO_BACKUP" == "1" ]; then
-        env > /etc/default/locale
-        /etc/init.d/cron restart
-        if [ ! -f /leanote/data/crontab ]; then
-            echo "0 2 * * * /init backup > /dev/null" > /leanote/data/crontab
-        fi
-        crontab /leanote/data/crontab
+        sed -i "s/0 0/0 ${BACKUP_HOUR}/" /leanote/crontab -i
+    else
+        sed -i "/init backup/d" /leanote/crontab
     fi
+
+    crontab /leanote/crontab
 
     # init or restore db
     if [ ! -f /leanote/data/db/init_db_done ]; then
@@ -64,7 +67,7 @@ elif [ "$1" == "backup" ]; then
         -o /leanote/data/db_backup
     cd /leanote/data
     tar czf leanote_${now}.tgz files mongodb_backup upload \
-        app.conf db_backup crontab
+        app.conf db_backup
     rm -rf db_backup
     mv leanote_${now}.tgz /leanote/backup
     find /leanote/backup/* -name "*.tgz" -mtime +$KEEP_DAYS -exec rm {} \;

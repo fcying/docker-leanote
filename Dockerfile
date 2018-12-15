@@ -4,7 +4,7 @@ MAINTAINER fcying
 ENV DEBIAN_FRONTEND noninteractive
 ENV VER 2.6.1
 RUN echo "deb http://ftp.cn.debian.org/debian stretch main" > /etc/apt/sources.list \
-    && apt-get update && apt-get upgrade \
+    && apt-get update && apt-get upgrade -y \
     && apt-get install -y vim wget cron gnupg psmisc \
         wkhtmltopdf xvfb ttf-freefont fontconfig \
     # mongodb 3.6
@@ -44,6 +44,7 @@ killall Xvfb\
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY init /
+COPY crontab /leanote
 RUN chmod +x /init
 
 ENTRYPOINT ["/init"]

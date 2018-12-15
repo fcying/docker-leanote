@@ -1,0 +1,2 @@
+0 */1 * * * find /leanote/data/files/export_pdf/ -name '*.pdf' -mmin +60 -delete > /dev/null
+0 0 * * * /init backup > /dev/null
