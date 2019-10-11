@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV VER 2.6.1
 RUN echo "deb http://ftp.cn.debian.org/debian stretch main" > /etc/apt/sources.list \
     && apt-get update && apt-get upgrade -y \
-    && apt-get install -y vim wget cron gnupg psmisc \
+    && apt-get install -y daemontools vim wget cron gnupg psmisc \
         wkhtmltopdf xvfb ttf-freefont fontconfig \
     # mongodb 3.6
     && echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/3.6 main" >> /etc/apt/sources.list \
@@ -41,10 +41,12 @@ DISPLAY=:10.0 wkhtmltopdf-origin $@ \n\
 killall Xvfb\
 ' > /usr/local/bin/wkhtmltopdf \
     && chmod +x /usr/local/bin/wkhtmltopdf \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && useradd -u 911 -U -G users -d /leanote -s /bin/bash abc \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY init /
+COPY run.sh /
 COPY crontab /leanote
-RUN chmod +x /init
+RUN chmod +x /init /run.sh
 
 ENTRYPOINT ["/init"]

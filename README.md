@@ -10,6 +10,9 @@ services:
     leanote:
         image: fcying/leanote:latest
         environment:
+            - PUID=1000
+            - PGID=1000
+            - UMASK_SET=022
             - AUTO_BACKUP=1     # auto backup data
             - BACKUP_HOUR=2     # auto backup time
             - KEEP_DAYS=30      # days of history to keep
@@ -19,6 +22,7 @@ services:
             - ./leanote_backup:/leanote/backup
         ports:
             - "9000:9000"
+        restart: always
 ```
 
 
