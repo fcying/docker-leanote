@@ -2,11 +2,15 @@ FROM debian:stretch-slim
 MAINTAINER fcying
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV VER 2.6.1
 RUN echo "deb http://ftp.cn.debian.org/debian stretch main" > /etc/apt/sources.list \
     && apt-get update && apt-get upgrade -y \
-    && apt-get install -y daemontools vim wget cron gnupg psmisc \
+    && apt-get install -y daemontools vim wget cron gnupg psmisc unzip \
         wkhtmltopdf xvfb ttf-freefont fontconfig \
+    #go 1.16.3
+    && wget -O go.tgz https://golang.org/dl/go1.16.3.linux-amd64.tar.gz \
+    && tar xzf go.tgz -C /usr/local/ && rm -rf go.tgz \
+    && ln -svf /usr/local/go/bin/go /usr/local/bin/ \
+    && ln -svf /usr/local/go/bin/gofmt /usr/local/bin/ \
     # mongodb 3.6
     && echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/3.6 main" >> /etc/apt/sources.list \
     && apt-key adv --keyserver hkp://keyserver.Ubuntu.com:80 --recv 58712A2291FA4AD5 \
@@ -17,9 +21,13 @@ RUN echo "deb http://ftp.cn.debian.org/debian stretch main" > /etc/apt/sources.l
     && ln -sf /usr/bin/mongodump /Users/life/Desktop/hadoop/mongodb-osx-x86_64-2.4.7/bin \
     && ln -sf /usr/bin/mongorestore /Users/life/Desktop/hadoop/mongodb-osx-x86_64-2.4.7/bin \
     # leanote binary
-    && mkdir leanote && cd leanote \
-    && wget https://sourceforge.net/projects/leanote-bin/files/${VER}/leanote-linux-amd64-v${VER}.bin.tar.gz/download \
-    && tar xzvf download && rm download \
+    && mkdir /leanote && cd /leanote \
+    && wget https://github.com/coocn-cn/leanote/archive/refs/heads/master.zip \
+    && unzip master.zip && rm master.zip \
+    && cd leanote-master/assets/build && ./build.sh \
+    && mv output/leanote /leanote/ \
+    && rm -rf /leanote/leanote-master \
+    && rm -rf /usr/local/go && rm -rf ~/go \
     # Chinese fonts
     && apt-get install -y \
         fonts-arphic-bkai00mp \
