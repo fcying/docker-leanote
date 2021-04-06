@@ -70,7 +70,11 @@ elif [ "$1" == "backup" ]; then
         app.conf db_backup
     rm -rf db_backup
     mv leanote_${now}.tgz /leanote/backup
-    find /leanote/backup/* -name "*.tgz" -mtime +$KEEP_DAYS -exec rm {} \;
+
+    # check expired data
+    if [ $(ls /leanote/backup | grep -c ".*") -gt $KEEP_DAYS ]; then
+        find /leanote/backup/* -name "*.tgz" -mtime +$KEEP_DAYS -exec rm {} \;
+    fi
 
     chown -R abc:abc /leanote/backup
 else
